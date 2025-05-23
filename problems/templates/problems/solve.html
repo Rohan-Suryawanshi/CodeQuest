@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{problem.title}}</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .code-editor {
+      height: 400px;
+      background: #1e293b; /* Dark background for a modern feel */
+      color: #f5f5f5; /* Light text color */
+      padding: 12px;
+      font-family: "Fira Code", monospace;
+      border-radius: 8px;
+      overflow-y: auto;
+    }
+
+    .test-case {
+      background-color: #f8fafc;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+   <form action="{% url 'submit_code' id=problem.id%}" method="POST">
+        {% csrf_token %}
+  <div class="p-6 sm:p-10">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <!-- Problem Title -->
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">{{problem.title}}</h1>
+
+      <!-- Problem Description -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">Problem Description</h2>
+        <p class="text-gray-600 leading-relaxed">
+          {{problem.problem_statement}}
+        </p>
+      </div>
+
+      <!-- Constraints -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">Constraints</h2>
+        <ul class="list-disc pl-6 text-gray-600 space-y-1">
+          {{constraints_html|safe}}
+        </ul>
+      </div>
+
+      <!-- Topics -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">Topics</h2>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full">{{problem.tags}}</span>
+        </div>
+      </div>
+
+      <!-- Input Format -->
+      
+
+      <!-- Code Editor -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-lg font-semibold text-gray-700">Write Your Code</h2>
+          <select
+            class="border border-gray-300 rounded-md p-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm" name="language">
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="c++">C++</option>
+            <option value="java">Java</option>
+            <option value="c">C</option>
+          </select>
+        </div>
+       
+        {% comment %} <div class="code-editor" name="code" contenteditable="true">
+          // Start coding here...
+        </div>  {% endcomment %}
+        <div class="code-editor-container">
+            <textarea class="code-editor w-full" name="code" placeholder="Write your code here..." rows="10"></textarea>
+        </div>
+
+
+      </div>
+
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">Input Format</h2>
+        <p class="text-gray-600 leading-relaxed">
+          {{problem.input_format}}
+        </p>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">Output Format</h2>
+        <p class="text-gray-600 leading-relaxed">
+          {{problem.output_format}}
+        </p>
+      </div>
+
+      <!-- Test Cases -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">Test Cases</h2>
+        {{test_cases_html|safe}}
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-end">
+        <button
+          class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md">
+          Submit Solution
+        </button>
+      </div>
+
+
+<div class="test-results">
+  {% if results %}
+    <h2 class="font-semibold text-gray-700">Test Results:</h2>
+    <ul>
+      {% for result in results %}
+        <li class="{% if result.passed %}text-green-600{% else %}text-red-600{% endif %}">
+          Test Case {{ forloop.counter }}: {{ result.message }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+    </div>
+  </div>
+  </form>
+
+
+</body>
+
+</html>

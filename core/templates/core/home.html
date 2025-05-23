@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr" description="A platform for coding challenges and problem-solving."
+   keywords="coding, programming, challenges, problem-solving">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'core/images/favicon/apple-touch-icon.png' %}" />
+   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'core/images/favicon/favicon-32x32.png' %}" />
+   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'core/images/favicon/favicon-16x16.png' %}" />
+   <link rel="manifest" href="{% static 'core/images/favicon/site.webmanifest' %}" />
+
+  <title>CodeQuest</title>
+   <link rel="stylesheet" href="{% static 'core/css/style.css' %}" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+    rel="stylesheet"
+/>
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+    :root {
+      --background-color: #f6f8ff;
+      --black: #4a4947;
+      --orange: #ffbd73;
+      --dark-orange: #fd8b51;
+    }
+
+    * {
+      font-family: Gillroy, sans-serif;
+    }
+
+
+    span{
+      font-family: jost;
+      font-weight: 500;
+      color: var(--dark-orange);
+      font-size: 4vh;
+    }
+
+    a{
+      display: inline-block;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 500;
+      font-size: 2.5vh;
+    }
+    nav a{
+      display: inline-block;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 500;
+      font-size: 2.5vh;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover{
+      color: var(--dark-orange);
+    }
+
+    nav h2{
+      font-family: jost;
+      font-weight: 500;
+      color: var(--black);
+      font-size: 4vh;
+    }
+  </style>
+</head>
+
+<body>
+ 
+  <div class="wrapper">
+    
+    <div class="page1">
+      <div class="circle"></div>
+      {% comment %} <nav class="navigation_bar">
+        <div class="nav_left">
+          <h2>Code <span>Quest</span></h2>
+        </div>
+        <div class="nav_right">
+          <a href="{% url "home" %}">Home</a>
+          <a href="{% url "problem" %}">Problems</a>
+          <a href="#">Leaderbord</a>
+          {% if user.username %}
+            <a href="#">{{ user.username }}</a>
+            <a href="{% url 'logout' %}">Logout</a>
+          {% endif %}
+        </div>
+      </nav> {% endcomment %}
+
+       <nav>
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-8 py-4">
+         <h2 class="text-2xl font-medium">Code <span>Quest</span></h2>
+         <button id="hamburger-btn" type="button" class="inline-flex items-center p-2 md:hidden">
+            <span class="sr-only">Open main menu</span>
+            <i class="ri-menu-line"></i>
+         </button>
+         <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul class="flex flex-col md:flex-row md:space-x-4">
+               <li>
+                  <a href="{% url 'home' %}" class="block py-2 px-3 hover:bg-orange">Home</a>
+               </li>
+               <li>
+                  <a href="{% url 'problem' %}" class="block py-2 px-3">Problems</a>
+               </li>
+               <li>
+                  <a href="{% url 'leaderboard' %}" class="block py-2 px-3">Leaderbord</a>
+               </li>
+          
+              {% if not user.username %}
+              <li class="relative">
+                <button id="user-menu-button" class="block py-2 px-3 hover:bg-orange">Login As</button>
+                <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                  <a href="{% url 'login' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">User</a>
+                  <a href="{% url 'admin:index' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin</a>
+                </div>
+              </li>
+              {% endif %} 
+               
+
+               {% if user.username %}
+               <li>
+                  <a href=" {% url "profile" %} " class="block py-2 px-3">{{ user.username }}</a>
+               </li>
+               <li>
+                  <a href="{% url 'logout' %}" class="block py-2 px-3">Logout</a>
+               </li>
+               {% endif %}
+
+            </ul>
+         </div>
+      </div>
+   </nav>
+      <div class="hero">
+        <div class="left">
+          <h2>A New Way to <span>Learn</span></h2>
+          <h4>CodeQuest is the best platform to help you enhance your skills, expand<br> your knowledge and prepare for technical interviews.</h4>
+          <a href="{% url "register" %}" class="btn_create_account">Start Learning</a>
+        </div>
+        <div class="right">
+            <img src="{% static 'core/images/coding_boy.svg' %}"></img>
+        </div>
+      </div>
+    </div>
+    <div class="page2">
+      <div class="subheading">
+        <h2>The <span>CodeQuest</span> advantage</h2>
+      </div>
+      <div class="card_section">
+        <div class="card">
+          <i class="ri-code-s-slash-fill"></i>
+          <h3>Compitition</h3>
+           <img src="{% static 'core/images/join.png' %}"></img>
+        </div>
+        <div class="card">
+          <i class="ri-apps-line"></i>
+          <h3>Practice</h3>
+           <img src="{% static 'core/images/learn.png' %}"></img>
+        </div>
+        <div class="card">
+          <i class="ri-medal-line"></i>
+          <h3>Leader board</h3>
+           <img src="{% static 'core/images/compete.png' %}"></img>
+        </div>
+      </div>
+    </div>
+
+    <div class="page3">
+      <div class="left">
+        <h5>Leaderboard</h5>
+        <h2>Claim Your <br>bragging rights</h2>
+        <h3>Practice and win to grab your spot<br>among the best in your<br>school,country</h3>
+        <a href="#" class="btn_create_account">Compete Now</a>
+      </div>
+      <div class="right">
+        <img src="{% static 'core/images/leaderboard.png' %}"></img>
+      </div>
+    </div>
+    <div>
+      <p>.</p>
+    </div>
+    
+  </div>
+
+  <script>
+     document.getElementById('user-menu-button').addEventListener('click', function() {
+                  var menu = document.getElementById('user-menu');
+                  menu.classList.toggle('hidden');
+                });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+    integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="{% static 'core/javascript/main.js' %}"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</body>
+
+</html>

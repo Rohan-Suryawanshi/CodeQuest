@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ problem_name }} - Code Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <div class="max-w-4xl mx-auto py-8">
+        <h1 class="text-4xl font-bold mb-6">{{ problem_name }} - Test Results</h1>
+
+        <!-- Summary Section -->
+        <div class="mb-6">
+            <p class="text-xl font-semibold">Summary:</p>
+            <p class="text-lg text-gray-600">Total Test Cases: {{ total }}</p>
+            <p class="text-lg text-green-500">Passed: {{ passed }}</p>
+            <p class="text-lg text-red-500">Failed: {{ failed }}</p>
+        </div>
+
+        <!-- Test Case Results -->
+        {% if results %}
+        <div class="space-y-4">
+            {% for result in results %}
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <p class="font-semibold">Input:</p>
+                <pre class="bg-gray-50 p-2 rounded">{{ result.input }}</pre>
+
+                <p class="font-semibold mt-2">Expected Output:</p>
+                <pre class="bg-gray-50 p-2 rounded">{{ result.expected }}</pre>
+
+                <p class="font-semibold mt-2">Actual Output:</p>
+                <pre class="bg-gray-50 p-2 rounded">{{ result.actual }}</pre>
+
+                <p class="font-semibold mt-2">Status: 
+                    <span class="text-white 
+                    {% if result.status == 'passed' %}bg-green-500{% else %}bg-red-500{% endif %}
+                    px-2 py-1 rounded">{{ result.status }}</span>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-lg text-gray-600">No results found.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

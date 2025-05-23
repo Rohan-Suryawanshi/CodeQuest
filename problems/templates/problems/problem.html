@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Responsive Dropdown Example</title>
+   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+   <script src="https://cdn.tailwindcss.com"></script>
+   <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+      :root {
+         --background-color: #f6f8ff;
+         --black: #4a4947;
+         --orange: #ffbd73;
+         --dark-orange: #fd8b51;
+      }
+
+      select {
+         outline: none;
+      }
+
+      span {
+         font-family: jost;
+         font-weight: 500;
+         color: var(--dark-orange);
+         font-size: 4vh;
+      }
+
+      a {
+         position: relative;
+         display: inline-block;
+         text-decoration: none;
+         color: var(--black);
+         font-weight: 500;
+         font-size: 2.5vh;
+         transition: color 0.3s ease;
+      }
+
+      a:hover {
+         color: #fd8b51;
+      }
+   </style>
+  
+
+</head>
+
+<body>
+
+   <nav>
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-8 py-4">
+         <h2 class="text-2xl font-medium">Code <span>Quest</span></h2>
+         <button id="hamburger-btn" type="button" class="inline-flex items-center p-2 md:hidden">
+            <span class="sr-only">Open main menu</span>
+            <i class="ri-menu-line"></i>
+         </button>
+         <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul class="flex flex-col md:flex-row md:space-x-4">
+               <li>
+                  <a href="{% url 'home' %}" class="block py-2 px-3">Home</a>
+               </li>
+               <li>
+                  <a href="{% url 'problem' %}" class="block py-2 px-3">Problems</a>
+               </li>
+               <li>
+                  <a href="{% url 'leaderboard' %}" class="block py-2 px-3">Leaderbord</a>
+               </li>
+               {% if user.username %}
+               <li>
+                  <a href="{% url 'profile' %}" class="block py-2 px-3">{{ user.username }}</a>
+               </li>
+               <li>
+                  <a href="{% url 'logout' %}" class="block py-2 px-3">Logout</a>
+               </li>
+               {% endif %}
+
+            </ul>
+         </div>
+      </div>
+   </nav>
+
+
+   <form id="filterForm" action="{% url "problem_list" %}" method="get">
+   <div class="flex items-center justify-center">
+      <div class="flex flex-wrap items-center gap-4 max-w-6xl rounded-lg p-4 w-full"
+         style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
+
+         <!-- Difficulty Dropdown -->
+         <select name="difficulty"
+            class="border border-gray-300 rounded p-2 bg-gray-50 focus:border-blue-400 w-full md:w-auto">
+            <option value="">Difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+         </select>
+
+         <!-- Status Dropdown -->
+         <select name="status"
+            class="border border-gray-300 rounded p-2 bg-gray-50 focus:border-blue-400 w-full md:w-auto">
+            <option value="">Status</option>
+            <option value="todo">Todo</option>
+            <option value="solved">Solved</option>
+         </select>
+
+         <!-- Topics Dropdown -->
+         <select name="topic"
+            class="border border-gray-300 rounded p-2 bg-gray-50 focus:border-blue-400 w-full md:w-auto" >
+            <option value="">Topic</option>
+            <option value="array">Array</option>
+            <option value="string">String</option>
+            <option value="dynamic programming">Dynamic Programming</option>
+            <option value="tree">Tree</option>
+            <option value="graph">Graph</option>
+            <option value="backtracking">Backtracking</option>
+            <option value="linked list">Linked List</option>
+            <option value="binary search">Binary Search</option>
+         </select>
+
+         <!-- Search Input -->
+         <div class="flex items-center border border-gray-300 rounded p-2 bg-gray-50 w-full md:flex-1">
+            <i class="ri-search-line text-gray-500 mr-2"></i>
+            <input type="text" name="problem-title" placeholder="Enter the Title"
+               class="focus:outline-none bg-transparent w-full" autocomplete="off"/>
+         </div>
+
+         <!-- Search Button -->
+         <button type="submit"
+            class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors w-full md:w-auto mt-4 md:mt-0">
+            Search
+         </button>
+
+         <a href="{% url "pick_random" %}"><div id="pickOne"
+   class="flex items-center gap-2 cursor-pointer bg-orange-500 text-white p-3 rounded-lg w-full md:w-auto mt-4 md:mt-0 justify-center">
+   <i class="ri-dice-line"></i>
+   <h4 class="font-semibold">Pick One</h4>
+</div></a>
+      </div>
+   </div>
+</form>
+
+   <div class="p-6 flex justify-center items-center">
+      <div
+         class="relative flex flex-col w-full h-full overflow-auto text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
+         {% if problems %}
+         <table class="w-full text-left table-auto min-w-max">
+            <thead>
+               <tr>
+                  <th class="p-4 border-b border-slate-200 bg-slate-50">
+                     <p class="text-sm font-normal leading-none text-slate-500">
+                        Problem Title
+                     </p>
+                  </th>
+                  <th class="p-4 border-b border-slate-200 bg-slate-50">
+                     <p class="text-sm font-normal leading-none text-slate-500">
+                        Difficulty
+                     </p>
+                  </th>
+                  <th class="p-4 border-b border-slate-200 bg-slate-50">
+                     <p class="text-sm font-normal leading-none text-slate-500">
+                        Tags
+                     </p>
+                  </th>
+                  <th class="p-4 border-b border-slate-200 bg-slate-50">
+                     <p class="text-sm font-normal leading-none text-slate-500">
+                        Status
+                     </p>
+                  </th>
+                  <th class="p-4 border-b border-slate-200 bg-slate-50">
+                     <p class="text-sm font-normal leading-none text-slate-500 text-center">
+                        Action
+                     </p>
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               <!-- Example Problem 1 -->
+               {% for problem in problems %}
+               <tr class="hover:bg-slate-50 border-b border-slate-200">
+                  <td class="p-4 py-5">
+                     <p class="block font-semibold text-sm text-slate-800">
+                        {{problem.title}}
+                     </p>
+                  </td>
+                  <td class="p-4 py-5">
+                     <p class="text-sm text-slate-500">{{problem.difficulty}}</p>
+                  </td>
+                  <td class="p-4 py-5">
+                     <p class="text-sm text-slate-500">{{problem.tags}}</p>
+                  </td>
+                  <td class="p-4 py-5">
+                     <p class="text-sm text-slate-500">Unsolved</p>
+                  </td>
+                  <td class="p-4 py-5">
+                     <button class="w-full h-10 text-sm text-white bg-blue-600 rounded hover:bg-blue-500">
+                        <!-- <a href='solve/{{problem.id}}' class="hover:text-white">Solve</a> -->
+                        <a href="{% url 'solve' problem.id %}" class="hover:text-white">Solve</a>
+                     </button>
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+         {% else %}
+         <div class="p-4 text-center">
+            <p class="text-lg text-slate-500">No problems found</p>
+         </div>
+         {% endif %}
+
+          <div class="flex justify-left items-center px-4 py-3">
+    <div class="flex space-x-1">
+        <!-- First and Prev buttons -->
+        {% if problems.has_previous %}
+            <a href="?page=1" class="px-3 py-1 min-w-20 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
+                First
+            </a>
+            <a href="?page={{ problems.previous_page_number }}" class="px-3 py-1 min-w-20 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
+                Prev
+            </a>
+        {% else %}
+            <span class="px-3 py-1 min-w-20 text-sm font-normal text-slate-300 bg-white border border-slate-200 rounded cursor-not-allowed">
+                First
+            </span>
+            <span class="px-3 py-1 min-w-20 text-sm font-normal text-slate-300 bg-white border border-slate-200 rounded cursor-not-allowed">
+                Prev
+            </span>
+        {% endif %}
+
+        <!-- Page numbers -->
+        {% for num in problems.paginator.page_range %}
+            {% if problems.number == num %}
+                <span class="px-3 py-1 min-w-9 text-sm font-normal text-white bg-slate-800 border border-slate-800 rounded">
+                    {{ num }}
+                </span>
+            {% else %}
+                <a href="?page={{ num }}" class="px-3 py-1 min-w-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
+                    {{ num }}
+                </a>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Next and Last buttons -->
+        {% if problems.has_next %}
+            <a href="?page={{ problems.next_page_number }}" class="px-3 py-1 min-w-20 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
+                Next
+            </a>
+            <a href="?page={{ problems.paginator.num_pages }}" class="px-3 py-1 min-w-20 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
+                Last
+            </a>
+        {% else %}
+            <span class="px-3 py-1 min-w-20 text-sm font-normal text-slate-300 bg-white border border-slate-200 rounded cursor-not-allowed">
+                Next
+            </span>
+            <span class="px-3 py-1 min-w-20 text-sm font-normal text-slate-300 bg-white border border-slate-200 rounded cursor-not-allowed">
+                Last
+            </span>
+        {% endif %}
+    </div>
+</div>
+         
+      </div>
+   </div>
+
+
+
+
+
+
+
+   <script>
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const navbar = document.getElementById('navbar-default');
+
+      // Toggle the navbar when the hamburger button is clicked
+      hamburgerBtn.addEventListener('click', () => {
+         navbar.classList.toggle('hidden');
+      });
+
+      document.getElementById('pickOne').addEventListener('click', function () {
+      const form = document.getElementById('filterForm');
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'pick_one';
+      input.value = 'true';
+      form.appendChild(input);
+      form.submit();
+   });
+   </script>
+   
+
+</body>
+
+</html>

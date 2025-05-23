@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Create Account</title>
+   <link
+         href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+         rel="stylesheet"
+      />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+    :root {
+      --background-color: #f6f8ff;
+      --black: #4a4947;
+      --orange: #ffbd73;
+      --dark-orange: #fd8b51;
+    }
+
+    * {
+      font-family: Gillroy, sans-serif;
+    }
+
+    form {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    .error-message {
+      display: none;
+      font-size: 0.75rem;
+      color: #dc2626;
+    }
+
+
+    select {
+      outline: none;
+    }
+
+    span {
+      font-family: jost;
+      font-weight: 500;
+      color: var(--dark-orange);
+      font-size: 4vh;
+    }
+
+    a {
+      position: relative;
+      display: inline-block;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 500;
+      font-size: 2.5vh;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #fd8b51;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <nav>
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-8 py-4">
+      <h2 class="text-2xl font-medium">Code <span>Quest</span></h2>
+      <button id="hamburger-btn" type="button" class="inline-flex items-center p-2 md:hidden">
+        <span class="sr-only">Open main menu</span>
+        <i class="ri-menu-line"></i>
+      </button>
+      <div class="hidden w-full md:block md:w-auto z-10 backdrop-blur-sm bg-gray-50 rounded-lg" id="navbar-default">
+        <ul class="flex flex-col md:flex-row md:space-x-4">
+          <li>
+            <a href="{% url 'home' %}" class="block py-2 px-3">Home</a>
+          </li>
+          <li>
+            <a href="{% url 'problem' %}" class="block py-2 px-3">Problems</a>
+          </li>
+          <li>
+            <a href="{% url 'leaderboard' %}" class="block py-2 px-3">Leaderbord</a>
+          </li>
+          {% if user.username %}
+          <li>
+            <a href="{% url 'profile' %}" class="block py-2 px-3">{{ user.username }}</a>
+          </li>
+          <li>
+            <a href="{% url 'logout' %}" class="block py-2 px-3">Logout</a>
+          </li>
+          {% endif %}
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <form method="post" onsubmit="return validateForm()">
+    {% csrf_token %}
+    <h2 class="text-center font-medium text-lg mb-2">Create Account</h2>
+    <div>
+      <input type="text" name="username" placeholder="Username" class="rounded my-2 p-2 w-full" autocomplete="off"
+        id="username">
+      <p class="error-message" id="username-error">Enter a valid username (letters and numbers only)</p>
+    </div>
+    <div>
+      <input type="email" name="email" placeholder="Email" class="rounded my-2 p-2 w-full" autocomplete="off"
+        id="email">
+      <p class="error-message" id="email-error">Please enter a valid email address</p>
+    </div>
+    <div>
+      <input type="password" name="password" placeholder="Password" class="rounded my-2 p-2 w-full" autocomplete="off"
+        id="password">
+      <p class="error-message" id="password-error">Password is required</p>
+    </div>
+    <div>
+      <input type="password" name="confirm_password" placeholder="Confirm Password" class="rounded my-2 p-2 w-full"
+        autocomplete="off" id="confirm-password">
+      <p class="error-message" id="confirm-password-error">Passwords do not match</p>
+    </div>
+    <input type="submit" value="Sign Up"
+      class="bg-blue-500 text-white p-2 mt-2 rounded hover:bg-blue-700 cursor-pointer w-full">
+    <p class="text-center mt-2 text-sm">Already have an account? <a href="{% url "login" %}"
+        class="text-blue-500">Login</a></p>
+  </form>
+
+  <script>
+    function validateForm() {
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      // Error message elements
+      const usernameError = document.getElementById('username-error');
+      const emailError = document.getElementById('email-error');
+      const passwordError = document.getElementById('password-error');
+
+      // Reset error messages
+      usernameError.style.display = 'none';
+      emailError.style.display = 'none';
+      passwordError.style.display = 'none';
+
+      // Validation checks
+      let isValid = true;
+      const regexUsername = /^[a-zA-Z0-9]+$/;
+
+      if (!username || !regexUsername.test(username)) {
+        usernameError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!email) {
+        emailError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!password) {
+        passwordError.style.display = 'block';
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const navbar = document.getElementById('navbar-default');
+
+  // Toggle the navbar when the hamburger button is clicked
+  hamburgerBtn.addEventListener('click', () => {
+    navbar.classList.toggle('hidden');
+  });
+    </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</body>
+
+</html>
